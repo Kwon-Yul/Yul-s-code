@@ -1,3 +1,4 @@
+# 예제 1번
 a,b,c = map(int, input('세 정수를 입력하시오 :').split())
 if b<a and b<c:
     a,b=b,a
