@@ -80,8 +80,8 @@ void* send_msg(void* arg)
     char temp[BUF_SIZE];
  
     /** send join messge **/
-    printf(" >> join the chat !! \n");
-    sprintf(myInfo, "%s's join. IP_%s\n",name , clnt_ip);
+    printf(" >> 채팅에 입장하였습니다. \n");
+    sprintf(myInfo, "%s 님이 채팅에 참여하엿습니다.(IP : %s)\n",name , clnt_ip);
     write(sock, myInfo, strlen(myInfo));
  
     while(1)
@@ -171,17 +171,17 @@ void changeName()
 void menu()
 {
     system("clear");
-    printf(" **** moon/sum chatting client ****\n");
-    printf(" server port : %s \n", serv_port);
-    printf(" client IP   : %s \n", clnt_ip);
-    printf(" chat name   : %s \n", name);
-    printf(" server time : %s \n", serv_time);
-    printf(" ************* menu ***************\n");
-    printf(" if you want to select menu -> !menu\n");
-    printf(" 1. change name\n");
-    printf(" 2. clear/update\n");
-    printf(" **********************************\n");
-    printf(" Exit -> q & Q\n\n");
+    printf(" ========= 클라이언트 정보 =========\n");
+    printf(" 서버 포트     : %s \n", serv_port);
+    printf(" 클라이언트 IP : %s \n", clnt_ip);
+    printf(" 대화명        : %s \n", name);
+    printf(" 서버 시간     : %s \n", serv_time);
+    printf(" ============== 메뉴 ==============\n");
+    printf(" !menu 입력 시 메뉴 화면으로 이동 \n");
+    printf(" 1. 대화명 바꾸기 \n");
+    printf(" 2. 화면 새로고침 \n");
+    printf(" ==================================\n");
+    printf(" 종료하려면 q & Q 를 입력하세요\n\n");
 }    
  
 void error_handling(char* msg)
