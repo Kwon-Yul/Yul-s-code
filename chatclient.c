@@ -130,11 +130,11 @@ void menuOptions()
 {
     int select;
     // print menu
-    printf("\n\t**** menu mode ****\n");
-    printf("\t1. change name\n");
-    printf("\t2. clear/update\n\n");
-    printf("\tthe other key is cancel");
-    printf("\n\t*******************");
+    printf("\n\t*============ 메뉴 모드 ============\n");
+    printf("\t1. 대화명 바꾸기\n");
+    printf("\t2. 새로고침 \n\n");
+    printf("\t다른 키를 누르면 메뉴 모드를 취소합니다.");
+    printf("\n\t=====================================");
     printf("\n\t>> ");
     scanf("%d", &select);
     getchar();
@@ -162,10 +162,10 @@ void menuOptions()
 void changeName()
 {
     char nameTemp[100];
-    printf("\n\tInput new name -> ");
+    printf("\n\t새로운 대화명을 입력하세요. -> ");
     scanf("%s", nameTemp);
     sprintf(name, "[%s]", nameTemp);
-    printf("\n\tComplete.\n\n");
+    printf("\n\t새로고침 완료.\n\n");
 }
  
 void menu()
