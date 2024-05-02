@@ -9,7 +9,7 @@
 #include<time.h>
  
 #define BUF_SIZE 100
-#define MAX_CLNT 100
+#define MAX_CLNT 5
 #define MAX_IP 30
  
 void * handle_clnt(void *arg);
@@ -19,7 +19,6 @@ char* serverState(int count);
 void menu(char port[]);
  
  
-/****************************/
  
 int clnt_cnt=0;
 int clnt_socks[MAX_CLNT];
@@ -32,7 +31,6 @@ int main(int argc, char *argv[])
     int clnt_adr_sz;
     pthread_t t_id;
  
-    /** time log **/
     struct tm *t;
     time_t timer = time(NULL);
     t=localtime(&timer);
@@ -60,6 +58,11 @@ int main(int argc, char *argv[])
  
     while(1)
     {
+        if (clnt_cnt >= MAX_CLNT) {
+            printf("더 이상 접속할 수 없습니다. 최대 허용 클라이언트 수를 초과했습니다.\n");
+            continue;
+        }
+
         t=localtime(&timer);
         clnt_adr_sz=sizeof(clnt_adr);
         clnt_sock=accept(serv_sock, (struct sockaddr*)&clnt_adr, &clnt_adr_sz);
@@ -70,16 +73,19 @@ int main(int argc, char *argv[])
  
         pthread_create(&t_id, NULL, handle_clnt, (void*)&clnt_sock);
         pthread_detach(t_id);
-        printf(" Connceted client IP : %s ", inet_ntoa(clnt_adr.sin_addr));
+        printf(" 접속한 클라이언트 IP(시간) : %s ", inet_ntoa(clnt_adr.sin_addr));
         printf("(%d-%d-%d %d:%d)\n", t->tm_year+1900, t->tm_mon+1, t->tm_mday,
         t->tm_hour, t->tm_min);
-        printf(" chatter (%d/100)\n", clnt_cnt);
+        printf(" 접속자 수 : (%d/5)\n", clnt_cnt);
+        
+
+
     }
     close(serv_sock);
     return 0;
 }
  
-void *handle_clnt(void *arg)
+void *handle_clnt(void *arg) 
 {
     int clnt_sock=*((int*)arg);
     int str_len=0, i;
@@ -88,7 +94,6 @@ void *handle_clnt(void *arg)
     while((str_len=read(clnt_sock, msg, sizeof(msg)))!=0)
         send_msg(msg, str_len);
  
-    // remove disconnected client
     pthread_mutex_lock(&mutx);
     for (i=0; i<clnt_cnt; i++)
     {
@@ -99,6 +104,9 @@ void *handle_clnt(void *arg)
             break;
         }
     }
+
+    printf("클라이언트 %d가 연결을 해제했습니다.\n", clnt_sock);
+
     clnt_cnt--;
     pthread_mutex_unlock(&mutx);
     close(clnt_sock);
@@ -127,9 +135,9 @@ char* serverState(int count)
     strcpy(stateMsg ,"None");
     
     if (count < 5)
-        strcpy(stateMsg, "Good");
+        strcpy(stateMsg, "연결 안정");
     else
-        strcpy(stateMsg, "Bad");
+        strcpy(stateMsg, "연결 불안정");
     
     return stateMsg;
 }        
@@ -137,9 +145,10 @@ char* serverState(int count)
 void menu(char port[])
 {
     system("clear");
-    printf(" **** moon/sun chat server ****\n");
-    printf(" server port    : %s\n", port);
-    printf(" server state   : %s\n", serverState(clnt_cnt));
-    printf(" max connection : %d\n", MAX_CLNT);
-    printf(" ****          Log         ****\n\n");
+    printf(" ========= 채팅 서버 상태 =========\n");
+    printf(" 서버 포트      : %s\n", port);
+    printf(" 서버 상태      : %s\n", serverState(clnt_cnt));
+    printf(" 최대 접속자 수 : %d\n", MAX_CLNT);
+    printf(" ==========   접속 로그  ==========\n\n");
 }
+
